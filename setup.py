@@ -6,4 +6,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=["psutil", "pynvml"],
+    entry_points={
+        "notebook.serverextension": [
+            "jupyterlab_resource_monitor = backend.handler"
+        ]
+    },
 )

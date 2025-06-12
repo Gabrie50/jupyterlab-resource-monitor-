@@ -8,4 +8,4 @@ def load_jupyter_server_extension(nbapp):
     nbapp.web_app.add_handlers(".*", [
         (r"/jlab-resource-monitor/api/status", ResourceHandler)
     ])
-  
+    

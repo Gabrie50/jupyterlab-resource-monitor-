@@ -11,13 +11,12 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/index.tsx'), // seu arquivo de entrada
+      entry: path.resolve(__dirname, 'src/index.tsx'),
       name: 'JupyterlabResourceMonitor',
-      formats: ['es'], // formato ES Modules, que o JupyterLab aceita
+      formats: ['es'],
       fileName: 'index',
     },
     rollupOptions: {
-      // Essas dependências o JupyterLab já fornece, não deve embutir
       external: [
         'react',
         'react-dom',

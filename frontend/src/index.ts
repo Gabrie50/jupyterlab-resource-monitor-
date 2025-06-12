@@ -1,31 +1,33 @@
-import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
-import { ILayoutRestorer, MainAreaWidget } from '@jupyterlab/application';
+import {
+  JupyterFrontEnd,
+  JupyterFrontEndPlugin,
+} from '@jupyterlab/application';
+
+import { ICommandPalette, MainAreaWidget, WidgetTracker } from '@jupyterlab/apputils';
 import { ReactWidget } from '@jupyterlab/apputils';
-import { ResourceMonitor } from './components/ResourceMonitor';
-
-class ResourceMonitorWidget extends ReactWidget {
-  constructor() {
-    super();
-    this.addClass('jp-ResourceMonitorWidget');
-  }
-
-  render() {
-    return <ResourceMonitor />;
-  }
-}
+import React from 'react';
+import ResourceMonitor from './components/ResourceMonitor';
 
 const extension: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlab-resource-monitor',
   autoStart: true,
-  requires: [ILayoutRestorer],
-  activate: (app: JupyterFrontEnd, restorer: ILayoutRestorer) => {
-    const widget = new MainAreaWidget({ content: new ResourceMonitorWidget() });
-    widget.id = 'resource-monitor-widget';
-    widget.title.label = 'Resource Monitor';
-    widget.title.closable = true;
+  requires: [ICommandPalette],
+  activate: (app: JupyterFrontEnd, palette: ICommandPalette) => {
+    console.log('✅ Resource Monitor extension activated');
 
-    app.shell.add(widget, 'left', { rank: 500 });
-    restorer.add(widget, widget.id);
+    const command = 'resource-monitor:open';
+
+    app.commands.addCommand(command, {
+      label: 'Open Resource Monitor',
+      execute: () => {
+        const content = ReactWidget.create(<ResourceMonitor />);
+        const widget = new MainAreaWidget({ content });
+        widget.title.label = 'Resource Monitor';
+        app.shell.add(widget, 'main');
+      }
+    });
+
+    palette.addItem({ command, category: 'Monitoring' });
   }
 };
 
